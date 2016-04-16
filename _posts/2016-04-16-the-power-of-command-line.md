@@ -5,7 +5,7 @@ date:   2016-04-16
 categories: jekyll unix commandline
 ---
 
-**This article was originally posted on [my old
+**This article was originally posted as part of [my old
  blog](https://techfortytwo.wordpress.com) on Dec 16, 2012.**
 
 If there is one central theme that permeates my

@@ -5,7 +5,7 @@ date:   2016-04-17
 categories: jekyll testing groovy testng rest
 ---
 
-**This article was originally posted on [my old
+**This article was originally posted as part of [my old
  blog](https://techfortytwo.wordpress.com) on July 29, 2013.**
 
 I am a big fan of automated testing. I have always tried to automate

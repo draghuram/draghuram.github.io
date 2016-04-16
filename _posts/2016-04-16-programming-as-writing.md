@@ -5,7 +5,7 @@ date:   2016-04-16
 categories: jekyll programming writing
 ---
 
-**This article was originally posted on [my old
+**This article was originally posted as part of [my old
  blog](https://techfortytwo.wordpress.com) on Jan 18, 2013.**
 
 Great care should be taken to make code readable. This is no different
