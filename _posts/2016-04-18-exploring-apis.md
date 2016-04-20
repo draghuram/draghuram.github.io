@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Exploting APIs"
+title:  "Exploring APIs"
 date:   2016-04-18
 categories: api groovy repl jython osgi
 ---
