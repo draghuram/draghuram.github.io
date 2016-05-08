@@ -1,0 +1,9 @@
+
+com.example.AuthorizationException: null
+	at com.example.UserHelperImpl.deleteUser(UserHelperImpl.java:95)
+	at com.example.UserController.deleteUser(UserController.java:316)
+        ...
+	at com.example.LicenseFilter.doFilter(LicenseFilter.java:42)
+        ...
+	at com.example.SecurityFilter.doFilter(SecurityFilter.java:224)
+        ...
