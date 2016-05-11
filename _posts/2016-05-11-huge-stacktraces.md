@@ -26,7 +26,7 @@ Having suffered this for a while, I decided to solve the problem
 by writing a script. The requirements are very simple. Remove every line
 in the stack trace that doesn't refer to our classes, with a small
 caveat. Keep the first line of every exception irrespective of whether
-the line refers to our class or not. This is becase it helps to have
+the line refers to our class or not. This is because it helps to have
 some minimal information about every exception in the chain. 
 
 Here are couple of sample outputs from the script. Let us assume that
