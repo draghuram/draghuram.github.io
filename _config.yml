@@ -7,7 +7,7 @@
 
 # Site settings
 title: It's all about Software
-# email: draghuram at gmail dot com
+email: draghuram@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
   This is a blog about all things related to Software. In particular, 
   I am going to write about my opinions and preferences in the way code
