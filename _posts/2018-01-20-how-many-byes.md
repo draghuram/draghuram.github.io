@@ -15,7 +15,7 @@ pattern (number of players followed by number of players getting
 byes):
 
 ```
-    6 - 2
+     6 - 2
     20 - 12
     21 - 11
 ```
