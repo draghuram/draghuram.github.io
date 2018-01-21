@@ -113,10 +113,10 @@ So we not only discovered the pattern and proved that it is true but we
 also found the solution starting from problem statement itself.
 
 Sure, the math is pretty elementary but all the same, the formal
-treatment of the problem presents a pleasant deviation from the usual
+treatment of the problem presented a pleasant deviation from the usual
 coding work :-).
 
-Even more importantly, the problem presents an interesting
+Even more importantly, the problem provided an interesting
 opportunity to teach kids that what works for few inputs may not work
 for all inputs and that it is very important to prove the solution for
 a general case.
