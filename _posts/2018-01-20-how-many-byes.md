@@ -105,7 +105,13 @@ x & = 2^m - N \\
 $$
 
 There you go! Starting from the problem statement, we have derived
-the formula for number of byes to be $$2^m - N$$.
+the formula for number of byes to be $$2^m - N$$. 
+
+Now if you want to get an idea how the problem can be solved using
+[Python](https://www.python.org/), head over to the 
+[lesson notes](http://pythonintro.readthedocs.io/en/latest/lessons/lesson5.html)
+for the Python course I am currently teaching some middle school
+kids.
 
 ### Conclusion
 
