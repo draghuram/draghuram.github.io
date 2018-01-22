@@ -33,8 +33,8 @@ off, if number of players is exactly same as exponential of 2 (such as
 We can see that the pattern (or formula) works pretty well but can we
 actually prove that this is the case for any N? Let us give it a try.
 
-Before we begin, here is a property that holds true for N (number of
-players):
+Before we begin, here is a property that holds true for N (where N is
+the number of players and is greater than 1):
 
 $$2^{m-1} < N < 2^m\tag{1}\label{1}$$
 
