@@ -21,4 +21,4 @@ must say it is very exciting.
 Here is a blog post I wrote at the time of
 [KubeDR](https://github.com/catalogicsoftware/kubedr)'s release:
 
-https://catalogicsoftware.com/blog/kubedr-disaster-recovery-for-kubernetes-clusters
+<https://catalogicsoftware.com/blog/kubedr-disaster-recovery-for-kubernetes-clusters>
