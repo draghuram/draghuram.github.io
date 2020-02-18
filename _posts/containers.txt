@@ -1,0 +1,31 @@
+
+## Introduction
+
+Container technology has been a transformative force for the last few
+years, similar to how Virtualization has affected the IT
+landscape in the years before. Since Kubernetes, which is a container
+orchestration platform, is all the rage these days, I wanted to write
+about my experience in learning and working with it over last few
+months. But before I do that, I would like to dedicate this article to
+covering containers which is at the heart of Kubernetes. 
+
+## Overview
+
+Every few years, a technology comes along that changes how developers
+work and how applications get deployed. Virtualization played that
+role in the early part of 21st century. It reached a point where
+people get surprised to hear when someone says they are using a
+physical server. I remember how I switched to running multiple VMs
+(mostly running Windows) on my Linux workstation and enjoying the
+convenience of having a small portable "lab". 
+
+The same thing happened when I came across Docker around 2013. The
+technology seemed fascinating and soon, I was using it on my Ubuntu
+laptop for many things such as building asciidoc documentation to
+building our company's product (ECX, provide a link). Once I started
+using the container technology in day to day work, I was curious to
+know how exactly it works. I am very interested in Operating Systems
+and other infrastructure components (such as File Systems) so I really
+wanted to understand how containers work. I always felt that one
+should really understansd the underlying concepts of a technology
+rather than just be satisfied with using it.
