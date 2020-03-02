@@ -29,3 +29,391 @@ and other infrastructure components (such as File Systems) so I really
 wanted to understand how containers work. I always felt that one
 should really understansd the underlying concepts of a technology
 rather than just be satisfied with using it.
+
+## Core Concepts
+
+<img src="containers.png" alt="drawing" style="width:700px;"/>
+
+This picture captures many important details about
+containers. Incidentally, I don't like those images that show Docker
+as a layer between Kernel and containers. There is no such Docker 
+layer. Docker simply sets up few things initially and starts the
+container process. Once that is done, Docker is out of the way and has
+no more role in the running of containers.
+
+These are the most critical aspects of the container technology:
+
+- They run directly on a host without any intermediate layer (such as
+  Hypervisor).
+
+- Containers are *isolated* groups of processes running on a single
+  host.
+
+- All containers share the kernel.
+
+The most important point to note is the fact that container processes
+run directly on the host. There is no intermediate layer as is the
+case with virtualization such as VMware and VirtualBox.
+
+So if the container processes run directly on the host, what stops
+them from seeing each other or even affecting each other? That is
+where the isolation aspects of the kernel comes in. Kernel has
+provisions to isolate or sandbox a process (or a group of processes)
+to the point that the processes believe that they are running on a
+dedicated host. This is despite the fact that they are just normal
+processes on the host and they can be seen from the host just like any
+other processes (assuming you have sufficient privileges).
+
+BTW, a container is usually a single process though sometimes you see
+more than one process as well. So if you follow the recommended
+pattern of one process per container, what you are talking about is
+taking a normal process and then creating an isolated environment
+around it. Basically limiting the process in terms of what it can see
+and what it can do. 
+
+Finally, it is important to understand that all containers share same
+running kernel. There is no isolation there and that is the biggest
+difference between a virtualization guest VM and containers. A side
+effect of sharing the kernel is the fact that if the container uses a
+kernel module or does something with a kernel module, there is no way
+to isolate it from other containers. 
+
+Best example of this comes from our very own vSnap. vSnap uses ZFS for
+underlying storage implementation and ZFS implementation is split
+between user space and a kernel module. So if you create a ZFS pool
+from one container, other containers will see it. More importantly, a
+pool created from one container hangs, the hang will affect all
+containers using ZFS. 
+
+## Advantages and Use cases
+
+Since containers are no more than any other process running on the
+host (albeit with some restrictions), they are considered
+light-weight. This is true especially compared to Virtual machines
+that use Hypervisors. 
+
+Since containers package entire application stack, both developers and
+ops people will use exactly same image. This prevents the usual gap
+between developer and production environments. 
+
+Containers are also best suited for microservices.
+
+And finally, they became a de-facto standard for deploying
+applications in the cloud, again due to the complete packaging of
+application stack.
+
+To be fair, containers do not fit all use cases. If you want complete
+isolation between applications, say for security reasons, VMs work
+better. Containers as already mentioned share kernel VMs have better
+isoaltion. However, may use cases simply don't require such level of
+isolation ane hence, yoiu can take advantage of the container benefits
+as listed above.
+
+## Building blocks
+
+- chroot
+
+    - A system call that changes the root directory of a process. 
+
+- namespaces
+
+    - Allow partitioning of virtual system resources such as PIDs and
+      mounted file systems. 
+
+- control groups (cgroups)
+
+    - Allow partitioning of physical system resources such as CPU and
+      memory).
+
+
+Note:
+These are three fundamental features of Linux kernel that make
+containers work. 
+
+chroot system call allows a process's root directory to be
+changed to any directory. Once that is done, the process can only see
+and use files that are reachable from the new root directory. chroot
+has been a feature of Unix for a very long time and is the basis for
+very early container technologies. 
+
+Namespaces provide features similar to multi-tenancy where the kernel
+provides isolation for each supported resource type. For example, PIDs
+are one such resource where namespaces are supported. If two processes
+are running in two different namespaces, each can have same PID and
+each cannot see the other process. Similar to PIDs, there are many
+other resource types for which namespaces are supported. I will
+discuss about them in more detail shortly. 
+
+Control groups (cgroups) allow limiting physical resources to a group
+of processes (or a single process). For example, if you want to limit
+a process to 100MB of main memory even though the host has much larger
+memory, you can easily do that using cgroups.
+
+So namespaces, cgroups, and chroot combine together to make containers
+possible. Docker and other container solutions are nothing more than
+wrapper programs that cleverly use these three features to give the
+illusion of isolation.
+
+## Namespaces - Examples
+
+- PID
+
+    - Isolates process ID ranges so that processes in different
+      namespaces can have same PID.
+
+- User
+
+    - Isolates UID and GID numbers. Especially useful to run as root
+      inside the container.
+
+- UTS
+
+    - Provides isolation for host name and domain name.
+
+Note:
+Here are some example namespaces. I have listed only few simple ones
+that can be easily demonstrated here. I omitted few more such as
+network and mount namespaces. Do "man 7 namespaces" to see the full
+list.
+
+https://github.com/karelzak/util-linux/issues/648
+    shows a way to create pid namespace.
+
+$ unshare -f -pu --mount-proc=/root/rootfs/proc chroot /root/rootfs  bash
+
+## Docker
+
+- Containers existed in one form or another for very long time.
+    - Solaris Zones, lxc
+
+- Docker brought the technology to mainstream 
+
+    - Defined a simple and portable image format
+    - Made it easy to build new images
+    - Made sharing a breeze (Docker Hub)
+
+Note:
+Google has been using containers for long time, since 2005 onwards at
+least. In fact, the initial code for cgroups has been donated by
+Google. Since then, namespaces were added to the mix and then "lxc"
+came along as a container solution.
+
+But the real popularity in the wide developer world started after
+Docker came into the picture. The main reasons are the portable image
+format and APIs.
+
+---
+
+## Docker images
+
+- Understanding how images work is very important because they form
+  the core of Docker technology.
+
+- At its simplest, a docker image is nothing but a tar file.
+
+- You can build images by making modifications in the existing
+  images. 
+
+Note:
+Demo building a simple Dockerfile and show the layers. Don't show the
+picture until demo is done.
+
+$ docker save imagetest >image.tar
+
+Then show the contents of the tar file including json file and each
+layer separately. Show that diff layers only have changes.
+
+---
+
+## Images
+
+<img src="container-layers.jpg" alt="drawing" style="width:700px;"/>
+
+---
+
+## Docker image layers
+
+- Images comprise of layers
+
+    - All except the top one are read-only
+
+    - The top layer is write layer and all writes and modifications in
+      the container go there. 
+
+    - write layer is discarded when containers are deleted.
+
+Note:
+Having a separate write later (and COW) speeds up starting time and
+allows read-only layers to be shared among containers.
+
+But doing large writes to the container layer is not efficient and
+moreover, the data is going to be discarded when container is
+deleted. If you need persistent data (for a database for example), you
+need to use Docker volumes. One type of a Docker volume is a host
+directory that can be mounted inside the container.
+
+- Volume mounts. These are separate from image layers. They don't use
+  storage driver. One can use volume mounts to share or persist data. 
+
+---
+
+## Docker image layers
+
+- Docker uses storage drivers to merge layers, including the write
+  layer, to present a single combined directory view.
+
+- This directory is the root directory of the container process (by
+  way of chroot).
+
+---
+
+## Persistent Storage
+
+- If you want your containers to use persistent storage, use Docker
+  volumes. 
+    - E.g. NFS
+
+- The simplest example is mounting host directory inside the container
+  but that ties you with the host.
+
+---
+
+## Docker Registry
+
+- The Registry is a stateless application that stores and lets you
+  distribute Docker images.
+    - Repository names are part of the image name.
+
+- Registry servers can be run by any one but one server called
+  "Docker Hub" is special
+    - https://hub.docker.com/
+
+- Commands
+    - `docker pull` and `docker push`
+
+Note:
+We run a local repository here at Catalogic, accessible at
+"docker-registry.devad.catalogic.us:5000".
+
+---
+
+## Starting a Container
+
+- Use `run` subcommand to start a new container.
+
+- Containers exit when the main process exits.
+    - If you don't want this to happen, use `supervisord`
+
+- Demo
+
+Note:
+Show how to run containers with various options. 
+
+What happens when containers exit? Show that the data is still
+around. Use "docker start" to resume.
+
+---
+
+## Dockerfile
+
+- Instructions to build Docker images are provided in a "Dockerfile". 
+
+- Several "directives" are supported in a Dockerfile.
+    - FROM
+    - RUN
+    - ADD/COPY
+    - CMD/ENTRYPOINT
+    - EXPOSE
+
+Note:
+Show msplatform's Dockerfile.
+
+---
+
+## Useful Commands
+
+- `docker exec`
+    - Allows you to start a new process in a running container.
+   
+- `docker logs`
+    - Shows the STDOUT of the container process
+
+- `docker inspect`
+    - get details of various Docker objects
+
+---
+
+## Useful Commands
+
+- `docker images`
+
+- `docker ps [-a]`
+
+- `docker rm`
+
+- `docker rmi`
+
+---
+
+## Compose and Swarm
+
+- Compose is a tool for defining and running multi-container Docker
+  applications. 
+
+- Swarm allows a group of machines that are running Docker to be
+  formed into a cluster. 
+
+Note:
+Both these technologies are pretty much overshadowed by Kubernetes.
+
+---
+
+## Docker as developer tool
+
+- Developers can use it locally on their machine to run programs without
+  having to install them. 
+
+- This keeps the host machine pristine and also helps in case multiple
+  programs have dependency conflicts.
+
+Note:
+Mention the examples of ascii-doctor and pdf tools.
+
+---
+
+## Open source/Standards
+
+- Open Container Initiative (OCI)
+    - Created to define standard specs for image as well as run time. 
+    - Talk about changes from Docker image format
+
+- Alternatives/Variants
+    - `cri-o` (to be used with Kubernetes), `rkt` (RedHat)
+    - containerd: A layer between kernel and container
+      implementations.
+
+
+---
+
+## Kubernetes
+
+- Provides a cluster solution to deploy and scale containers. 
+
+- Has become *de facto* standard for deploying containers
+
+---
+
+## Conclusion
+
+- Containers offer a light-weight and efficient solution to run many
+  types of workloads.
+
+- They are now preferred way to deploy applications in the cloud.
+
+---
+
+
+
+
+
+
