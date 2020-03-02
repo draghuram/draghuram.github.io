@@ -12,4 +12,4 @@ new features were added.
 
 Here is an update about the changes:
 
-https://catalogicsoftware.com/blog/kubedr-going-strong-enhanced-with-new-features
+<https://catalogicsoftware.com/blog/kubedr-going-strong-enhanced-with-new-features>
