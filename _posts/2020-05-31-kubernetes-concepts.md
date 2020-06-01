@@ -11,5 +11,5 @@ this is bound to take a while, I decided to release it in stages.
 
 You can find the guide here:
 
-https://kubeconcepts.readthedocs.io/en/latest/index.html
+<https://kubeconcepts.readthedocs.io/en/latest/index.html>
 
